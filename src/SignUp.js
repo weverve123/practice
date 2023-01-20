@@ -2,28 +2,52 @@ import { View, Text,StyleSheet,TextInput,TouchableOpacity} from 'react-native'
 import React, { useState } from 'react'
 import Login from './Login';
 import Home from './Home';
-import { getDatabase } from '@react-native-firebase/database';
+// import { getDatabase } from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 export default function SignUp({navigation}) {
 
   const [email,setEmail]=useState('');
   const [password,setPassword]=useState('');
   const [message,setMessage]=useState('');
+  const [name,setName]=useState('');
 
-  const handleLoin= async()=>{
+  const handleSingUp= async()=>{
     try{
-        const isUserCreated =await auth().createUserWithEmailAndPassword(
+       if(email.length >0 && password.length >0 && name.length >0)
+       {
+        const responce =await auth().createUserWithEmailAndPassword(
           email,
           password
           );
-       console.log(isUserCreated);
-       
+       console.log(responce);
+       setName('');
+       setEmail('');
+       setPassword(''); 
+
+       const userData={
+          id:responce.user.uid,
+          name:name,
+          email:email,
+
+       }
+        
+        await firestore().collection("user").doc(responce.user.uid).set(
+          userData
+        )
+
+       }
+       else{
+        alert('Please Enter all data');
+       }
     }
     catch(err)
     {
        console.log(err);
-       setMessage(err.message);
+      //  setMessage(err.message);
+      alert("Please Enter The Details")
+     
     }
   }
   return (
@@ -32,6 +56,12 @@ export default function SignUp({navigation}) {
         <Text style={styles.heading}>SignUp</Text>
        </View>
        <View>
+
+       <TextInput placeholder='Name' 
+          value={name}
+          onChangeText={text =>setName(text)}
+          style={[styles.input,{bottom:20}]}/>
+
          <TextInput placeholder='Email' 
           value={email}
           onChangeText={text =>setEmail(text)}
@@ -45,12 +75,12 @@ export default function SignUp({navigation}) {
 
        </View>
        <TouchableOpacity 
-        onPress={()=>handleLoin()}
+        onPress={()=>handleSingUp()}
        >
          <View style={{marginTop:40,height:40,width:200,justifyContent:"center",alignItems:"center",backgroundColor:'red',borderRadius:20}}>
             <Text style={{color:"white",fontSize:20}}>SignUp</Text>
          </View>
-       <Text>{message}</Text>
+       
        </TouchableOpacity>
 
        <TouchableOpacity
@@ -80,6 +110,6 @@ const styles = StyleSheet.create({
         fontSize:30,
         fontWeight:'bold',
         color:"black",
-        bottom:20
+        bottom:30
     }
 });

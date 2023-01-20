@@ -3,11 +3,45 @@ import React, { useState } from 'react'
 import Home from './Home'
 import SignUp from './SignUp';
 import { getDatabase } from '@react-native-firebase/database';
+import auth from '@react-native-firebase/auth';
 
-export default function Login({navigation }) {
+export default function Login({navigation}) {
    
   const [email,setEmail]=useState('');
   const [password,setPassword]=useState('');
+  const [message,setMessage]=useState('');
+  
+
+
+  const handleLogin= async() =>{
+    try {
+     if(email.length>0 && password.length >0)
+     {
+      const isUserLogin =await auth().signInWithEmailAndPassword(
+        email,
+        password,
+      )
+      console.log(isUserLogin);
+      navigation.navigate('Home'
+      //   {
+      //   email:isUserLogin.user.email,
+      //   uid:isUserLogin.user,uid,
+      // }
+      );
+      console.log("Hello")
+     }
+     else{
+      alert("Please enter the field ")
+     }
+    }
+    catch(err)
+    {
+       console.log(err);
+      //  setMessage(err.message);
+      alert("User is Not ragister ...plz ragister user");
+    }
+    
+  }
   return (
     <View style={styles.main}>
        <View>
@@ -27,7 +61,7 @@ export default function Login({navigation }) {
 
        </View>
        <TouchableOpacity 
-        onPress={()=>navigation.navigate(Home)}
+        onPress={()=>handleLogin()}
        >
          <View style={{marginTop:40,height:40,width:200,justifyContent:"center",alignItems:"center",backgroundColor:'red',borderRadius:20}}>
             <Text style={{color:"white",fontSize:20}}>Login</Text>
@@ -35,11 +69,16 @@ export default function Login({navigation }) {
       
        </TouchableOpacity>
 
+       <View style={{top:10,bottom:10}}>
+        <Text style={{fontSize:10,fontWeight:"bold",color:"red"}}>
+          {message}
+        </Text>
+       </View>
        <TouchableOpacity 
          onPress={()=>navigation.navigate(SignUp)}
        >
          <View style={{marginTop:20}}>
-            <Text style={{fontSize:20,color:"black"}}>SignUp</Text>
+            <Text style={{fontSize:15,color:"blue",fontWeight:"bold"}}>New User SignUp ?</Text>
          </View>
        </TouchableOpacity>
     </View>

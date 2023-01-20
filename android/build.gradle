@@ -48,5 +48,9 @@ allprojects {
         }
         google()
         maven { url 'https://www.jitpack.io' }
+
+        maven {
+            url(project.getProperties().get("REACT_NATIVE_MAVEN_LOCAL_REPO"))
+        }
     }
 }

@@ -5,15 +5,17 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './src/Home'
 import Login from './src/Login';
 import SignUp from './src/SignUp';
+import Todo from './src/Todo';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
    <NavigationContainer>
      <Stack.Navigator>
-       <Stack.Screen name="Login" component={Login}/>
-       <Stack.Screen name="Home" component={Home} />
-       <Stack.Screen name="SignUp" component={SignUp} />
+       <Stack.Screen name="Login" component={Login} options={{headerShown:false}}/>
+       <Stack.Screen name="Home" component={Home} options={{headerShown:false}}/>
+       <Stack.Screen name="SignUp" component={SignUp} options={{headerShown:false}}/>
+       <Stack.Screen name="Todo" component={Todo} />
      </Stack.Navigator>
    </NavigationContainer>
   )
